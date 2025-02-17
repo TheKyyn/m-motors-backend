@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, vehicles
+from .routers import auth_router, vehicles_router
 from .config import settings
 
 app = FastAPI(
@@ -19,8 +19,8 @@ app.add_middleware(
 )
 
 # Inclusion des routers
-app.include_router(auth.router)
-app.include_router(vehicles.router)
+app.include_router(auth_router)
+app.include_router(vehicles_router)
 
 @app.get("/")
 async def root():

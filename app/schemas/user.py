@@ -16,14 +16,15 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     """Schéma pour la création d'un utilisateur"""
-    password: str = Field(..., min_length=8, pattern=r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+    # Au moins 8 caractères, au moins une lettre et un chiffre
+    password: str = Field(..., min_length=8, pattern=r'[A-Za-z0-9]{8,}')
 
 class UserUpdate(UserBase):
     """Schéma pour la mise à jour d'un utilisateur"""
     email: Optional[EmailStr] = None
     first_name: Optional[str] = Field(None, min_length=2, max_length=100)
     last_name: Optional[str] = Field(None, min_length=2, max_length=100)
-    password: Optional[str] = Field(None, min_length=8, pattern=r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+    password: Optional[str] = Field(None, min_length=8, pattern=r'[A-Za-z0-9]{8,}')
 
 class UserInDB(UserBase):
     """Schéma pour un utilisateur en base de données"""
