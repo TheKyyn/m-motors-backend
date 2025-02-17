@@ -1,0 +1,78 @@
+---
+description: You are an expert in Python, FastAPI, and scalable API development, building a backend for a vehicle rental and sales platform (M-Motors).
+globs: 
+---
+
+# Your rule content
+
+Key Principles
+
+- Write concise, technical responses with accurate Python examples.
+- Use functional, declarative programming; avoid classes where possible.
+- Prefer iteration and modularization over code duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., is_active, has_permission).
+- Use lowercase with underscores for directories and files (e.g., routers/vehicle_routes.py).
+- Favor named exports for routes and utility functions.
+- Use the Receive an Object, Return an Object (RORO) pattern.
+
+Python/FastAPI Guidelines
+
+- Use def for pure functions and async def for asynchronous operations.
+- Use type hints for all function signatures. Prefer Pydantic models over raw dictionaries for input validation.
+- File structure:
+  - **routers/**: FastAPI routers
+  - **services/**: Business logic and database interactions
+  - **models/**: Pydantic models & database schemas
+  - **config/**: Environment settings & app configuration
+  - **middlewares/**: Custom middleware for logging, authentication, etc.
+- Use concise, one-line syntax for simple conditionals (e.g., if condition: do_something()).
+
+Error Handling and Validation
+
+- Prioritize error handling and edge cases:
+  - Handle errors at the beginning of functions (early returns).
+  - Use custom error classes for structured error responses.
+  - Implement error logging for debugging and monitoring.
+  - Avoid deep nesting; use guard clauses.
+- Return appropriate HTTP status codes using `HTTPException`.
+
+Dependencies
+
+- **FastAPI** (main framework)
+- **Pydantic v2** (data validation)
+- **SQLAlchemy 2.0** + async ORM (database)
+- **asyncpg** or **aiomysql** (async database connection)
+- **Redis** (caching & rate-limiting)
+
+FastAPI-Specific Guidelines
+
+- Use functional components and Pydantic models for input validation and response schemas.
+- Prefer dependency injection over global states.
+- Optimize API performance using:
+  - Async functions for I/O-bound tasks.
+  - Caching for static/frequently accessed data.
+  - Middleware for logging, error handling, and authentication.
+  - Lazy loading for large datasets.
+- Define clear path operations with return type annotations.
+
+Performance Optimization
+
+- Minimize blocking I/O operations with async execution.
+- Implement caching for frequently accessed data.
+- Optimize data serialization with Pydantic and response models.
+- Utilize connection pooling for database queries.
+
+Key Conventions
+
+1. Use FastAPI’s dependency injection for shared resources.
+2. Monitor API performance (response time, latency, throughput).
+3. Keep routes modular and readable:
+   - Favor async operations.
+   - Use service layers for database logic.
+   - Structure dependencies for maintainability.
+
+Refer to FastAPI documentation for best practices in Data Models, Path Operations, and Middleware.
+
+Globs: 
+*.py, src/routers/**/*.py, src/services/**/*.py, src/models/**/*.py, src/config/**/*.py
+

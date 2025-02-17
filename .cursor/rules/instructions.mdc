@@ -1,0 +1,104 @@
+---
+description: M-Motors, entreprise spécialisée dans la vente de véhicules d'occasion depuis 1987, souhaite étendre ses services en ajoutant une offre de location longue durée avec option d'achat. Pour cela, une refonte complète de l'application web actuelle est prévue, incluant un backend performant et évolutif, conforme aux exigences du cloud AWS.
+globs: 
+---
+
+# Your rule content
+
+Objectifs
+
+Implémenter une API backend scalable permettant l'achat et la location de véhicules.
+
+Gérer l'inscription et la soumission des dossiers clients pour l'achat ou la location.
+
+Assurer une gestion efficace des documents dématérialisés.
+
+Intégrer un back-office pour la gestion des véhicules et des dossiers clients.
+
+Déployer l'application sur AWS en respectant les meilleures pratiques DevOps.
+
+Exigences Fonctionnelles
+
+Gestion des Véhicules
+
+Ajout de véhicules à la location ou à la vente.
+
+Modification du statut d'un véhicule (passage de vente à location et inversement).
+
+Consultation des véhicules disponibles.
+
+Gestion des Clients et Dossiers
+
+Inscription des clients.
+
+Dépôt de dossier pour achat ou location.
+
+Téléchargement et suivi des documents.
+
+Suivi de l'état du dossier depuis l'espace client.
+
+Gestion du Back-Office
+
+Visualisation des dossiers clients.
+
+Validation ou rejet des demandes d'achat/location.
+
+Gestion des services associés à la location (assurance, assistance, entretien, contrôle technique).
+
+Architecture et Technologies
+
+Stack Backend
+
+Langage & Framework : Python avec FastAPI (préféré), Flask ou Django API.
+
+Base de données : PostgreSQL hébergé sur AWS RDS.
+
+ORM : SQLAlchemy (async support) + Pydantic pour la validation.
+
+Caching : Redis pour améliorer la performance.
+
+Asynchronisme : Utilisation d'async def pour les opérations I/O-bound.
+
+Authentification : OAuth2 avec JWT pour la gestion des utilisateurs.
+
+Logs & Monitoring : Intégration avec AWS CloudWatch et Sentry.
+
+Déploiement AWS
+
+Containerisation : Docker + orchestration avec AWS ECS ou Kubernetes.
+
+Compute : EC2, AWS Lambda (pour certains traitements asynchrones).
+
+Stockage : S3 pour l'archivage des documents clients.
+
+Base de données : AWS RDS (PostgreSQL) + migrations gérées via Alembic.
+
+Sécurité : IAM roles, VPC sécurisé, chiffrement des données sensibles.
+
+CI/CD : GitHub Actions + AWS CodePipeline pour un déploiement automatisé.
+
+Bonnes Pratiques
+
+Utilisation du pattern Receive an Object, Return an Object (RORO).
+
+Validation stricte des données avec Pydantic.
+
+Modularisation du code :
+
+routers/ pour les routes FastAPI.
+
+services/ pour la logique métier et l'accès aux données.
+
+models/ pour les schémas Pydantic et SQLAlchemy.
+
+config/ pour les variables d'environnement.
+
+middlewares/ pour l'authentification et la journalisation.
+
+Gestion des erreurs via des classes d'exceptions personnalisées et HTTPException.
+
+Optimisation des performances avec caching et requêtes optimisées.
+
+Conclusion
+
+L'API backend devra être robuste, modulaire et facilement scalable pour supporter l'évolution des services de M-Motors. Une attention particulière sera portée à la sécurité, la performance et la maintenabilité du code.
