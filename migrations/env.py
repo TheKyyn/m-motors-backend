@@ -6,9 +6,15 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
+
+# Import des modèles et de la configuration
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from app.config import settings
 from app.database import Base
-from app.models import *  # Importe tous les modèles
+from app.models import User, Vehicle, Rental, Dossier  # Import explicite des modèles
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -64,12 +70,8 @@ def do_run_migrations(connection: Connection) -> None:
         context.run_migrations()
 
 
-async def run_async_migrations() -> None:
-    """In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
-
+async def run_migrations_online() -> None:
+    """Run migrations in 'online' mode."""
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = get_url()
     connectable = async_engine_from_config(
@@ -84,14 +86,7 @@ async def run_async_migrations() -> None:
     await connectable.dispose()
 
 
-def run_migrations_online() -> None:
-    """Run migrations in 'online' mode."""
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run_async_migrations())
-
-
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    run_migrations_online()
+    asyncio.run(run_migrations_online())

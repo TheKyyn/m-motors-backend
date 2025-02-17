@@ -1,7 +1,12 @@
 from typing import AsyncGenerator
+import logging
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from .config import settings
+
+# Configuration des logs
+logging.basicConfig(level=logging.DEBUG if settings.DEBUG else logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Création du moteur asynchrone
 engine = create_async_engine(
@@ -27,7 +32,8 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         try:
             yield session
             await session.commit()
-        except Exception:
+        except Exception as e:
+            logger.error(f"Database error: {str(e)}")
             await session.rollback()
             raise
         finally:

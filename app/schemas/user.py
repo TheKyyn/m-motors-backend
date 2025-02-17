@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     email: EmailStr
     first_name: str = Field(..., min_length=2, max_length=100)
     last_name: str = Field(..., min_length=2, max_length=100)
-    phone: Optional[str] = Field(None, pattern=r'^\+?[0-9]{10,15}$')
+    phone_number: Optional[str] = Field(None, pattern=r'^\+?[0-9]{10,15}$')
     address: Optional[str] = None
     city: Optional[str] = None
     postal_code: Optional[str] = Field(None, pattern=r'^[0-9]{5}$')
@@ -29,6 +29,7 @@ class UserUpdate(UserBase):
 class UserInDB(UserBase):
     """Schéma pour un utilisateur en base de données"""
     id: int
+    phone_number: Optional[str] = None  # Changé de phone à phone_number
     is_active: bool
     created_at: datetime
     updated_at: datetime

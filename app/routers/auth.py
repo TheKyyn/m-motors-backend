@@ -7,9 +7,10 @@ from ..schemas import UserCreate, UserResponse, Token
 from ..models.user import User
 from ..security import (
     authenticate_user, create_access_token, get_password_hash,
-    get_current_active_user
+    get_current_active_user, verify_password
 )
 from ..config import settings
+from sqlalchemy import select
 
 router = APIRouter(prefix="/auth", tags=["Authentification"])
 
@@ -30,7 +31,7 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
         hashed_password=get_password_hash(user_data.password),
         first_name=user_data.first_name,
         last_name=user_data.last_name,
-        phone=user_data.phone,
+        phone_number=user_data.phone_number,
         address=user_data.address,
         city=user_data.city,
         postal_code=user_data.postal_code,
@@ -49,21 +50,43 @@ async def login(
     db: AsyncSession = Depends(get_db)
 ):
     """Connexion d'un utilisateur"""
-    user = await authenticate_user(form_data.username, form_data.password, db)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email ou mot de passe incorrect",
-            headers={"WWW-Authenticate": "Bearer"},
+    try:
+        # Vérifier si l'utilisateur existe
+        result = await db.execute(
+            select(User).where(User.email == form_data.username)
         )
-    
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.email, "is_admin": user.is_admin},
-        expires_delta=access_token_expires
-    )
-    
-    return {"access_token": access_token, "token_type": "bearer"}
+        user = result.scalar_one_or_none()
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
+        # Vérifier le mot de passe
+        if not verify_password(form_data.password, user.hashed_password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        # Créer le token
+        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.email, "is_admin": user.is_admin},
+            expires_delta=access_token_expires
+        )
+        
+        return {"access_token": access_token, "token_type": "bearer"}
+        
+    except Exception as e:
+        print(f"Erreur lors de la connexion: {str(e)}")  # Log l'erreur
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la connexion: {str(e)}"
+        )
 
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):

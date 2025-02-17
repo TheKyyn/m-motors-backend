@@ -5,6 +5,7 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from .database import get_db
 from .schemas import TokenData
 from .models.user import User
@@ -35,8 +36,14 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 async def get_user_by_email(email: str, db: AsyncSession) -> Optional[User]:
     """Récupère un utilisateur par son email"""
-    result = await db.execute(User.__table__.select().where(User.email == email))
-    return result.scalar_one_or_none()
+    try:
+        result = await db.execute(
+            select(User).where(User.email == email)
+        )
+        return result.scalar_one_or_none()
+    except Exception as e:
+        print(f"Erreur lors de la récupération de l'utilisateur: {str(e)}")
+        return None
 
 async def authenticate_user(email: str, password: str, db: AsyncSession) -> Optional[User]:
     """Authentifie un utilisateur"""
