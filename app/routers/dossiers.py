@@ -6,10 +6,10 @@ from datetime import datetime
 import json
 
 from ..database import get_db
-from ..models import User, Dossier, Vehicle
+from ..models import User, Dossier, Vehicle, RentalService, dossier_rental_services
 from ..schemas import (
     DossierCreate, DossierResponse, DossierUpdate, 
-    DossierFilter, Document, DossierStatus, DossierType
+    DossierFilter, Document, DossierStatus, DossierType, ServiceStatus
 )
 from ..security import get_current_active_user, get_current_admin_user
 
@@ -248,4 +248,40 @@ async def cancel_dossier(
     
     dossier.status = DossierStatus.ANNULE.value
     await db.commit()
-    return None 
+    return None
+
+@router.post("/{dossier_id}/services/{service_id}", response_model=DossierResponse)
+async def add_service_to_dossier(
+    dossier_id: int,
+    service_id: int,
+    start_date: datetime,
+    end_date: datetime,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Ajoute un service à un dossier de location"""
+    # Vérifier l'accès au dossier
+    dossier = await db.get(Dossier, dossier_id)
+    if not dossier or (not current_user.is_admin and dossier.user_id != current_user.id):
+        raise HTTPException(status_code=404, detail="Dossier non trouvé")
+        
+    if dossier.type != DossierType.LOCATION:
+        raise HTTPException(status_code=400, detail="Les services ne peuvent être ajoutés qu'aux dossiers de location")
+        
+    # Vérifier que le service existe et est actif
+    service = await db.get(RentalService, service_id)
+    if not service or service.status != ServiceStatus.ACTIF:
+        raise HTTPException(status_code=404, detail="Service non trouvé ou inactif")
+        
+    # Ajouter le service au dossier
+    stmt = dossier_rental_services.insert().values(
+        dossier_id=dossier_id,
+        service_id=service_id,
+        monthly_price=service.price_per_month,
+        start_date=start_date,
+        end_date=end_date
+    )
+    await db.execute(stmt)
+    await db.commit()
+    
+    return dossier 

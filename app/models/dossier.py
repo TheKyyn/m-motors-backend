@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from enum import Enum as PyEnum
 from .dossier_rental_option import dossier_rental_options
+from .dossier_rental_service import dossier_rental_services
 
 from ..database import Base
 
@@ -63,6 +64,11 @@ class Dossier(Base):
         secondary=dossier_rental_options,
         backref="dossiers"
     )
+    rental_services = relationship(
+        "RentalService",
+        secondary=dossier_rental_services,
+        backref="dossiers"
+    )
 
     def to_dict(self):
         base_dict = {
@@ -81,7 +87,8 @@ class Dossier(Base):
             "admin_comments": self.admin_comments,
             "desired_loan_duration": self.desired_loan_duration,
             "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "updated_at": self.updated_at,
+            "rental_options": [option.to_dict() for option in self.rental_options],
+            "rental_services": [service.to_dict() for service in self.rental_services]
         }
-        base_dict["rental_options"] = [option.to_dict() for option in self.rental_options]
         return base_dict
