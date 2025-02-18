@@ -1,7 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth_router, vehicles_router, dossiers_router
+from fastapi.responses import JSONResponse
+import logging
+from .routers import auth_router, vehicles_router, dossiers_router, admin_router
 from .config import settings
+
+# Configuration des logs
+logging.basicConfig(
+    level=logging.DEBUG if settings.DEBUG else logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -18,10 +27,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Middleware pour le logging des requêtes
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.debug(f"Request: {request.method} {request.url}")
+    try:
+        response = await call_next(request)
+        logger.debug(f"Response status: {response.status_code}")
+        return response
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Une erreur interne est survenue"}
+        )
+
 # Inclusion des routers
 app.include_router(auth_router)
 app.include_router(vehicles_router)
 app.include_router(dossiers_router)
+app.include_router(admin_router)
 
 @app.get("/")
 async def root():

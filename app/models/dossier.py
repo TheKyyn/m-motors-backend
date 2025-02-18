@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, JSON, Enum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum as PyEnum
 
 from ..database import Base
@@ -20,6 +20,10 @@ class DossierStatus(str, PyEnum):
     REFUSE = "REFUSE"
     ANNULE = "ANNULE"
 
+def utcnow():
+    """Retourne la date et l'heure actuelles en UTC"""
+    return datetime.now(timezone.utc)
+
 class Dossier(Base):
     __tablename__ = "dossiers"
 
@@ -35,11 +39,11 @@ class Dossier(Base):
     monthly_income = Column(Float, nullable=False)
     employment_contract_type = Column(String, nullable=False)
     employer_name = Column(String, nullable=False)
-    employment_start_date = Column(DateTime, nullable=False)
+    employment_start_date = Column(DateTime(timezone=True), nullable=False)
     current_loans_monthly_payments = Column(Float, default=0)
     
     # Documents et commentaires
-    documents = Column(JSONB, default=list)
+    documents = Column(JSONB, server_default='[]')
     comments = Column(String, nullable=True)
     admin_comments = Column(String, nullable=True)
     
@@ -47,8 +51,8 @@ class Dossier(Base):
     desired_loan_duration = Column(Integer, nullable=True)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
 
     # Relations
     user = relationship("User", back_populates="dossiers")
