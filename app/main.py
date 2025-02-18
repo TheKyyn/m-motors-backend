@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 import logging
 from .routers import auth_router, vehicles_router, dossiers_router, admin_router
 from .config import settings
+from .routes import rental_options_router
 
 # Configuration des logs
 logging.basicConfig(
@@ -47,6 +48,11 @@ app.include_router(auth_router)
 app.include_router(vehicles_router)
 app.include_router(dossiers_router)
 app.include_router(admin_router)
+app.include_router(
+    rental_options_router,
+    prefix="/api/v1",
+    tags=["rental-options"]
+)
 
 @app.get("/")
 async def root():

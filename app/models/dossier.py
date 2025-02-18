@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from enum import Enum as PyEnum
+from .dossier_rental_option import dossier_rental_options
 
 from ..database import Base
 
@@ -57,9 +58,14 @@ class Dossier(Base):
     # Relations
     user = relationship("User", back_populates="dossiers")
     vehicle = relationship("Vehicle", back_populates="dossiers")
+    rental_options = relationship(
+        "RentalOption",
+        secondary=dossier_rental_options,
+        backref="dossiers"
+    )
 
     def to_dict(self):
-        return {
+        base_dict = {
             "id": self.id,
             "user_id": self.user_id,
             "vehicle_id": self.vehicle_id,
@@ -77,3 +83,5 @@ class Dossier(Base):
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
+        base_dict["rental_options"] = [option.to_dict() for option in self.rental_options]
+        return base_dict
