@@ -5,17 +5,17 @@ from enum import Enum
 
 class DossierType(str, Enum):
     """Type de dossier"""
-    ACHAT = "achat"
-    LOCATION = "location"
+    ACHAT = "ACHAT"
+    LOCATION = "LOCATION"
 
 class DossierStatus(str, Enum):
     """Statut du dossier"""
-    EN_ATTENTE = "en_attente"
-    EN_COURS_DE_TRAITEMENT = "en_cours_de_traitement"
-    DOCUMENTS_MANQUANTS = "documents_manquants"
-    ACCEPTE = "accepte"
-    REFUSE = "refuse"
-    ANNULE = "annule"
+    EN_ATTENTE = "EN_ATTENTE"
+    EN_COURS_DE_TRAITEMENT = "EN_COURS_DE_TRAITEMENT"
+    DOCUMENTS_MANQUANTS = "DOCUMENTS_MANQUANTS"
+    ACCEPTE = "ACCEPTE"
+    REFUSE = "REFUSE"
+    ANNULE = "ANNULE"
 
 class Document(BaseModel):
     """Schéma pour un document"""
