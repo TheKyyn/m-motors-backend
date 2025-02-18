@@ -15,7 +15,12 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: Optional[str] = None
     AWS_SECRET_ACCESS_KEY: Optional[SecretStr] = None
     AWS_REGION: str = "eu-west-3"
-    S3_BUCKET: str = "m-motors-documents"
+    
+    # S3 Configuration
+    S3_BUCKET_NAME: str
+    S3_VEHICLES_PREFIX: str = "vehicles/"
+    S3_DOCUMENTS_PREFIX: str = "documents/"
+    CLOUDFRONT_DOMAIN: Optional[str] = None
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
