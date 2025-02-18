@@ -35,6 +35,8 @@ class VehicleBase(BaseModel):
     images: List[str] = Field(default_factory=list)
     technical_details: Dict[str, str] = Field(default_factory=dict)
 
+    model_config = ConfigDict(from_attributes=True)
+
 class VehicleCreate(VehicleBase):
     """Schéma pour la création d'un véhicule"""
     pass
@@ -60,6 +62,8 @@ class VehicleUpdate(BaseModel):
     last_maintenance_date: Optional[datetime] = None
     next_maintenance_date: Optional[datetime] = None
 
+    model_config = ConfigDict(from_attributes=True)
+
 class VehicleInDB(VehicleBase):
     """Schéma pour un véhicule en base de données"""
     id: int
@@ -67,8 +71,6 @@ class VehicleInDB(VehicleBase):
     next_maintenance_date: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
-    
-    model_config = ConfigDict(from_attributes=True)
 
 class VehicleResponse(VehicleInDB):
     """Schéma pour la réponse API"""
@@ -86,3 +88,5 @@ class VehicleFilter(BaseModel):
     transmission: Optional[TransmissionType] = None
     available_for_sale: Optional[bool] = None
     available_for_rent: Optional[bool] = None
+
+    model_config = ConfigDict(from_attributes=True)
