@@ -21,17 +21,17 @@ Pour se connecter à la base de données hébergée sur le serveur Hetic, suivez
 2. **Informations de connexion**
 
    ```
-   Host: [Demandez à l'équipe]
+   Host: hetic.cd5ufp6fsve3.us-east-1.rds.amazonaws.com
    Port: 5432
    Database: mmotors_groupe13
-   Username: [Demandez à l'équipe]
-   Password: [Demandez à l'équipe]
+   Username: postgres
+   Password: LeContinent!
    ```
 
 3. **Connexion via psql**
 
    ```bash
-   psql "postgresql://[USERNAME]:[PASSWORD]@[HOST]:5432/mmotors_groupe13"
+   psql "postgresql://postgres:LeContinent!@hetic.cd5ufp6fsve3.us-east-1.rds.amazonaws.com:5432/mmotors_groupe13"
    ```
 
 4. **Connexion via PgAdmin**
@@ -99,14 +99,10 @@ Pour configurer et vous connecter à la base de données PostgreSQL, suivez ces 
 4. **Configuration des variables d'environnement**
 
    - Créez un fichier `.env` à la racine du projet
-   - Ajoutez les variables suivantes :
+   - Ajoutez la ligne suivante :
 
    ```
-   DATABASE_URL=postgresql://[USERNAME]:[PASSWORD]@[HOST]:5432/mmotors_groupe13
-   AWS_ACCESS_KEY_ID=[Demandez à l'équipe]
-   AWS_SECRET_ACCESS_KEY=[Demandez à l'équipe]
-   AWS_REGION=eu-west-3
-   S3_BUCKET_NAME=mmotors-files-groupe13
+   DATABASE_URL=postgresql://postgres:LeContinent!@hetic.cd5ufp6fsve3.us-east-1.rds.amazonaws.com:5432/mmotors_groupe13
    ```
 
 5. **Application des migrations**
