@@ -17,9 +17,9 @@ Avant de commencer, assurez-vous d'avoir :
    - AWS_SECRET_ACCESS_KEY
      Si vous ne les avez pas, demandez-les à l'équipe !
 
-## Installation pas à pas
+## Installation et Mise à jour
 
-### Méthode 1 : Installation automatique (Recommandée pour les débutants)
+### Première installation
 
 1. Ouvrez votre terminal :
 
@@ -51,30 +51,43 @@ chmod +x install-api.sh
    - Remplacez `<votre_aws_secret>` par votre AWS_SECRET_ACCESS_KEY
    - Sauvegardez avec Ctrl + X, puis Y, puis Enter
 
-### Méthode 2 : Installation manuelle (Pour les utilisateurs avancés)
+### Mise à jour de l'API
 
-1. Créez un fichier nommé `.env` :
+Lorsque l'équipe publie une nouvelle version de l'API, vous pouvez facilement la mettre à jour :
 
-   - Windows : `notepad .env`
-   - Mac/Linux : `nano .env`
-
-2. Copiez ce contenu dans le fichier :
+1. Si vous avez déjà le script d'installation :
 
 ```bash
-# Base de données (Ne modifiez pas cette partie)
-DATABASE_URL=postgresql://postgres:LeContinent!@hetic.cd5ufp6fsve3.us-east-1.rds.amazonaws.com:5432/mmotors_groupe13
-
-# Configuration AWS (À modifier)
-AWS_ACCESS_KEY_ID=<votre_aws_key>        # ← Remplacez par votre clé
-AWS_SECRET_ACCESS_KEY=<votre_aws_secret>  # ← Remplacez par votre clé secrète
-AWS_REGION=eu-west-3
-S3_BUCKET_NAME=mmotors-files-groupe13
+./install-api.sh --update
 ```
 
-3. Lancez l'API avec Docker :
+2. Si vous n'avez pas le script ou voulez la dernière version :
 
 ```bash
-docker run -d --name mmotors-api -p 8000:8000 --env-file .env wissem95/mmotors-api:latest
+# Télécharger le script
+curl -O https://raw.githubusercontent.com/TheKyyn/m-motors-backend/main/install-api.sh
+
+# Le rendre exécutable
+chmod +x install-api.sh
+
+# Lancer la mise à jour
+./install-api.sh --update
+```
+
+Le script va automatiquement :
+
+- Arrêter l'ancienne version
+- Télécharger la nouvelle version
+- Redémarrer l'API avec vos paramètres existants
+
+### Options du script
+
+Le script d'installation dispose de plusieurs options :
+
+```bash
+./install-api.sh --help         # Affiche l'aide
+./install-api.sh                # Installation normale
+./install-api.sh --update       # Mise à jour vers la dernière version
 ```
 
 ## Vérifier que tout fonctionne
