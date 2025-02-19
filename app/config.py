@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     # Email
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
-    SMTP_USER: Optional[EmailStr] = None
+    SMTP_USER: Optional[str] = None
     SMTP_PASSWORD: Optional[SecretStr] = None
     
     # Application
