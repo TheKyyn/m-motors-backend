@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     SMTP_USER: Optional[str] = None
     SMTP_PASSWORD: Optional[SecretStr] = None
     
+    # OpenAI pour le RAG Chat
+    OPENAI_API_KEY: Optional[SecretStr] = None
+    
     # Application
     APP_NAME: str = "M-Motors API"
     VERSION: str = "1.0.0"

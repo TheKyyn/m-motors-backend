@@ -90,4 +90,5 @@ class Dossier(Base):
             "updated_at": self.updated_at,
             "rental_options": [option.to_dict() for option in self.rental_options],
             "rental_services": [service.to_dict() for service in self.rental_services]
-        }        return base_dict
+        }
+        return base_dict

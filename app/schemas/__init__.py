@@ -11,6 +11,10 @@ from .dossier import (
     DossierResponse, DossierFilter, DossierType, DossierStatus,
     Document
 )
+from .rental_services import (
+    ServiceBase, ServiceCreate, ServiceUpdate, ServiceInDB,
+    ServiceResponse, ServiceFilter, ServiceType, ServiceStatus
+)
 
 __all__ = [
     # User schemas
@@ -24,5 +28,9 @@ __all__ = [
     # Dossier schemas
     "DossierBase", "DossierCreate", "DossierUpdate", "DossierInDB",
     "DossierResponse", "DossierFilter", "DossierType", "DossierStatus",
-    "Document"
+    "Document",
+    
+    # Service schemas
+    "ServiceBase", "ServiceCreate", "ServiceUpdate", "ServiceInDB",
+    "ServiceResponse", "ServiceFilter", "ServiceType", "ServiceStatus"
 ]

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
-from .routers import auth_router, vehicles_router, dossiers_router, admin_router
+from .routers import auth_router, vehicles_router, dossiers_router, admin_router, rag_router
 from .config import settings
 from .routes import rental_options_router
 
@@ -48,6 +48,7 @@ app.include_router(auth_router)
 app.include_router(vehicles_router)
 app.include_router(dossiers_router)
 app.include_router(admin_router)
+app.include_router(rag_router)
 app.include_router(
     rental_options_router,
     prefix="/api/v1",
